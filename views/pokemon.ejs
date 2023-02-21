@@ -1,0 +1,70 @@
+<%- include('template/cabecera', {tituloWeb: "Panel de Administración"})%>
+
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if(arrayPokemon.length > 0){ %> <% arrayPokemon.forEach(pokemon => { %>
+      <tr>
+        <th scope="row"><%= pokemon.id %></th>
+        <td><%= pokemon.nombre %></td>
+        <td><%= pokemon.tipo %></td>
+        <td><%= pokemon.descripcion %></td>
+        <td>
+          <a class="btn btn-warning btn-sm" href="pokemon/<%= pokemon._id %>">
+            Editar</a
+          >
+        </td>
+        <td>
+          <button
+            class="btn btn-danger btn-sm"
+            data-id="<%= pokemon._id %>"
+            id="eliminar<%= pokemon._id %>"
+            onclick="deletePokemon(this)"
+          >
+            Eliminar
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <% })} %>
+      </tr>
+    </tbody>
+  </table>
+
+  <h1>Crear</h1>
+  <a href="/pokemon/crear">Crear un nuevo pokemone</a>
+</div>
+
+<script>
+  async function deletePokemon(id) {
+    const btnEliminar = id;
+    
+      console.log(btnEliminar.dataset.id);
+      try {
+        const data = await fetch(`/pokemon/${btnEliminar.dataset.id}`, {
+          method: "delete",
+        });
+        const res = await data.json();
+        console.log(res);
+        if (res.estado) {
+          window.location.href = "/pokemon";
+        } else {
+          console.log(res);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+  }
+  
+</script>
+
+<%- include("template/footer") %>
